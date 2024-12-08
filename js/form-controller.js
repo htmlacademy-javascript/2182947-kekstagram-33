@@ -1,6 +1,7 @@
 import {isEscapeKey,stopPropagation} from './utils';
 import {sendData} from './api';
 import {VALID_HASHTAG,ErrorMessage,StatusOption,ZERO_LENGTH,MAX_HASHTAGS_LIST,SubmitButtonText,MAX_COMMENT_LENGTH} from './form-controller-data';
+import {showStatusMessage} from './notification-modal-handler';
 
 const uploadImageFormElement = document.querySelector('#upload-select-image');
 const hashtagElement = uploadImageFormElement.querySelector('.text__hashtags');
@@ -14,14 +15,14 @@ const pristine = new Pristine(uploadImageFormElement, {
   errorTextClass: 'img-upload__field-wrapper--error'
 });
 
-const blockSubmitButton = () => {
-  submitButtonElement.disabled = true;
-  submitButtonElement.textContent = `${SubmitButtonText.SENDING}`;
-};
-
-const unBlockSubmitButton = () => {
-  submitButtonElement.disabled = false;
-  submitButtonElement.textContent = `${SubmitButtonText.IDLE}`;
+const toggleDisableSubmitButton = (isDisabled) => {
+  if (isDisabled) {
+    submitButtonElement.disabled = true;
+    submitButtonElement.textContent = `${SubmitButtonText.SENDING}`;
+  } else {
+    submitButtonElement.disabled = false;
+    submitButtonElement.textContent = `${SubmitButtonText.IDLE}`;
+  }
 };
 
 const fetchHashtagErrorMessage = () => errorValidationMessageHashtag || ErrorMessage.ERROR_VALIDATION_MESSAGE_HASHTAG_DEFAULT;
@@ -61,13 +62,13 @@ commentFieldElement.addEventListener('keydown', (evt) => {
     stopPropagation(evt);
   }
 });
-import {showStatusMessage} from './notification-modal-handler';
+
 const setUploadFormSubmit = (closeForm) => {
   uploadImageFormElement.addEventListener('submit', async (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
-      blockSubmitButton();
+      toggleDisableSubmitButton(true);
       const formData = new FormData(evt.target);
       await sendData({
         onSuccess: () => {
@@ -78,7 +79,7 @@ const setUploadFormSubmit = (closeForm) => {
           showStatusMessage(StatusOption.ERROR_STATUS);
         },
         onHandlerFinally: () => {
-          unBlockSubmitButton();
+          toggleDisableSubmitButton(false);
         },
         body: formData
       });
