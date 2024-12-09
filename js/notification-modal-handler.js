@@ -4,40 +4,40 @@ import {isEscapeKey} from './utils';
 const closeErrorStatusMessageBtn = (status) => {
   const statusMessage = document.querySelector(`.${status}`);
   const statusButtonElement = statusMessage.querySelector(`.${status}__${TAG_NAME}`);
-  const removeMessage = () => {
+  const onStatusButtonClick = () => {
     statusMessage.remove();
-    document.removeEventListener('click', onClickOutsideHandler);
+    document.removeEventListener('click', onDocumentClick);
   };
-  function onClickOutsideHandler (evt) {
+  function onDocumentClick (evt) {
     if (!evt.target.closest(`.${status}__${INNER_CLASSNAME}`)) {
-      removeMessage();
+      onStatusButtonClick();
     }
   }
-  statusButtonElement.addEventListener('click', removeMessage);
-  document.addEventListener('click', onClickOutsideHandler);
+  statusButtonElement.addEventListener('click', onStatusButtonClick);
+  document.addEventListener('click', onDocumentClick);
 };
 
 const closeSuccessStatusMessage = (status) => {
   const statusMessage = document.querySelector(`.${status}`);
   const statusButtonElement = statusMessage.querySelector(`.${status}__${TAG_NAME}`);
-  const removeMessage = () => {
+  const onStatusButtonClick = () => {
     statusMessage.remove();
-    document.removeEventListener('keydown', onKeyDownHandler);
-    document.removeEventListener('click', onClickOutsideHandler);
+    document.removeEventListener('keydown', onDocumentKeyDown);
+    document.removeEventListener('click', onDocumentClick);
   };
-  function onKeyDownHandler (evt){
+  function onDocumentKeyDown (evt){
     if (isEscapeKey(evt)) {
-      removeMessage();
+      onStatusButtonClick();
     }
   }
-  function onClickOutsideHandler (evt) {
+  function onDocumentClick (evt) {
     if (!evt.target.closest(`.${status}__${INNER_CLASSNAME}`)) {
-      removeMessage();
+      onStatusButtonClick();
     }
   }
-  statusButtonElement.addEventListener('click', removeMessage);
-  document.addEventListener('keydown', onKeyDownHandler);
-  document.addEventListener('click', onClickOutsideHandler);
+  statusButtonElement.addEventListener('click', onStatusButtonClick);
+  document.addEventListener('keydown', onDocumentKeyDown);
+  document.addEventListener('click', onDocumentClick);
 };
 
 const showStatusMessage = (status) => {

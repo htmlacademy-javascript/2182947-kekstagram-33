@@ -13,13 +13,13 @@ const changeScaleValue = () => {
   scaleValueElement.setAttribute('value', `${changingScaleValue}%`);
 };
 
-const zoomOutImage = () => {
+const onImageScaleSmallerElementClick = () => {
   changingScaleValue = parseInt(changingScaleValue, NUMERAL_SYSTEM) - ImageScale.MIN;
   changingScaleValue = Math.max(changingScaleValue, ImageScale.MIN);
   changeScaleValue();
 };
 
-const zoomInImage = () => {
+const onImageScaleBiggerElementClick = () => {
   changingScaleValue = parseInt(changingScaleValue, NUMERAL_SYSTEM) + ImageScale.MIN;
   changingScaleValue = Math.min(changingScaleValue, ImageScale.MAX);
   changeScaleValue();
@@ -32,13 +32,13 @@ const resetScaleValue = () => {
 };
 
 const handleScaleListeners = () => {
-  imageScaleSmallerElement.addEventListener('click', zoomOutImage);
-  imageScaleBiggerElement.addEventListener('click', zoomInImage);
+  imageScaleSmallerElement.addEventListener('click', onImageScaleSmallerElementClick);
+  imageScaleBiggerElement.addEventListener('click', onImageScaleBiggerElementClick);
 };
 
 const removeScaleListeners = () => {
-  imageScaleSmallerElement.removeEventListener('click', zoomOutImage);
-  imageScaleBiggerElement.removeEventListener('click', zoomInImage);
+  imageScaleSmallerElement.removeEventListener('click', onImageScaleSmallerElementClick);
+  imageScaleBiggerElement.removeEventListener('click', onImageScaleBiggerElementClick);
 };
 
 export {handleScaleListeners,removeScaleListeners,resetScaleValue};
